@@ -1,6 +1,10 @@
 -- Falta: Agregar check constraints
 -- Falta: Agregar tablas Tarea-Archivo y Proyecto-Tarea-Usuario
 
+-- Tablas Primarias: Rol(sec), Usuario(sec), Proyecto(sec),
+--					Area(sec), 
+-- Tablas Compuestas: RolUsuarioProyecto(sec), 
+
 -- Se borran las secuencias
 DROP SEQUENCE secRol;
 DROP SEQUENCE secUsuario;
@@ -67,10 +71,10 @@ CREATE TABLE Usuario (
 	nombre VARCHAR(30) NOT NULL, 
 	apellido VARCHAR(30) NOT NULL, 
 	correo VARCHAR(60) NOT NULL UNIQUE, 
-	telefono INT NULL UNIQUE
+	telefono VARCHAR(20) NULL UNIQUE,
+	costoHora DECIMAL(18,0) NOT NULL
 );
 
--- ¿Costo?
 CREATE TABLE Proyecto ( 
 	idpProyecto INT NOT NULL PRIMARY KEY,
 	codigo VARCHAR(30) NOT NULL UNIQUE,
@@ -79,7 +83,9 @@ CREATE TABLE Proyecto (
 	estado VARCHAR(20) NOT NULL,
 	descripcion TEXT NULL, 
 	fechaInicio DATETIME NOT NULL, 
-	fechaCierre DATETIME NOT NULL
+	fechaCierre DATETIME NOT NULL,
+	costoCalculado DECIMAL(18,0) NOT NULL,
+	costoReal DECIMAL(18,0) NOT NULL
 );
 
 CREATE TABLE RolUsuarioProyecto (
@@ -104,7 +110,7 @@ CREATE TABLE Tarea (
 CREATE TABLE Area (
 	idpArea INT NOT NULL PRIMARY KEY,
 	codigo VARCHAR(30) NOT NULL UNIQUE,
-	nombre VARCHAR(30) NOT NULL,
+	nombre VARCHAR(30) NOT NULL UNIQUE,
 );
 
 CREATE TABLE ProyectoArea (
