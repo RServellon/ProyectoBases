@@ -1,9 +1,10 @@
 -- Falta: Agregar check constraints
 -- Falta: Agregar tablas Tarea-Archivo y Proyecto-Tarea-Usuario
 
--- Tablas Primarias: Rol(sec), Usuario(sec), Proyecto(sec),
---					Area(sec), 
--- Tablas Compuestas: RolUsuarioProyecto(sec), 
+-- Tablas Primarias: Rol(sec), Usuario(sec), Permiso(sec), Proyecto(sec),
+--					Area(sec), Archivo(sec), Tarea(sec), 
+-- Tablas Compuestas: RolUsuarioProyecto(sec), ProyectoArea,
+--					TareaArchivoProyecto(Sec), RegistroHora(sec)
 
 -- Se borran las secuencias
 DROP SEQUENCE secRol;
@@ -13,6 +14,7 @@ DROP SEQUENCE secArea;
 DROP SEQUENCE secArchivo;
 DROP SEQUENCE secTarea;
 DROP SEQUENCE secRolUsuarioProyecto;
+
 
 -- Se borran las tablas
 DROP TABLE Rol;
