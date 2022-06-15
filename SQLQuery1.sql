@@ -1,5 +1,3 @@
--- Falta: Agregar check constraints
--- Falta: Agregar tablas Tarea-Archivo y Proyecto-Tarea-Usuario
 
 -- Se borran las secuencias
 DROP SEQUENCE secRol;
@@ -14,6 +12,10 @@ DROP SEQUENCE secTareaArchivoProyecto;
 DROP SEQUENCE secRegistroHoraUsuario;
 
 -- Se borran las tablas
+DROP TABLE RegistroHoraUsuario;
+DROP TABLE RolUsuarioProyecto;
+DROP TABLE TareaArchivoProyecto;
+DROP TABLE ProyectoArea;
 DROP TABLE Rol;
 DROP TABLE Permiso;
 DROP TABLE Usuario;
@@ -21,10 +23,7 @@ DROP TABLE Proyecto;
 DROP TABLE Area;
 DROP TABLE Archivo;
 DROP TABLE Tarea;
-DROP TABLE RolUsuarioProyecto;
-DROP TABLE TareaArchivoProyecto;
-DROP TABLE ProyectoArea;
-DROP TABLE RegistroHoraUsuario;
+
 
 -- Se crean las secuencias
 CREATE SEQUENCE secRol 
@@ -81,7 +80,7 @@ CREATE TABLE Rol (
 	idpRol INT NOT NULL PRIMARY KEY, 
 	codigo VARCHAR(10) NOT NULL UNIQUE, 
 	nombre VARCHAR(30) NOT NULL UNIQUE,
-	permiso INT NOT NULL FOREIGN KEY REFERENCES Permiso(idpPermiso)
+	permiso INT NOT NULL FOREIGN KEY REFERENCES Permiso(idpPermiso) ON DELETE CASCADE
 );
 
 CREATE TABLE Usuario (
@@ -113,9 +112,9 @@ CREATE TABLE Proyecto (
 -- 	fechaDesasignacion DATETIME NULL CHECK(fechaDesasignacion >= fechaAsignacion)
 CREATE TABLE RolUsuarioProyecto (
 	idpRolUsuarioProyecto INT NOT NULL PRIMARY KEY,
-	idUsuario VARCHAR(15) NOT NULL FOREIGN KEY REFERENCES Usuario(identificacion),
-	idfRol INT NOT NULL FOREIGN KEY REFERENCES Rol(idpRol), 
-	idfProyecto INT NOT NULL FOREIGN KEY REFERENCES Proyecto(idpProyecto), 
+	idUsuario VARCHAR(15) NOT NULL FOREIGN KEY REFERENCES Usuario(identificacion) ON DELETE CASCADE,
+	idfRol INT NOT NULL FOREIGN KEY REFERENCES Rol(idpRol) ON DELETE CASCADE, 
+	idfProyecto INT NOT NULL FOREIGN KEY REFERENCES Proyecto(idpProyecto) ON DELETE CASCADE, 
 	fechaAsignacion DATETIME NOT NULL, 
 	fechaDesasignacion DATETIME NULL
 );
@@ -123,7 +122,7 @@ CREATE TABLE RolUsuarioProyecto (
 -- 	fechaAsignacion DATETIME NOT NULL CHECK(fechaAsignacion >= GETDATE()),
 CREATE TABLE Tarea (
 	idpTarea INT NOT NULL PRIMARY KEY, 
-	idfTarea INT NULL FOREIGN KEY REFERENCES Tarea(idpTarea),
+	idfTarea INT NULL FOREIGN KEY REFERENCES Tarea(idpTarea) ON DELETE NO ACTION,
 	nombre VARCHAR(100) NOT NULL, 
 	duracionHora INT NOT NULL CHECK(duracionHora > 0),
 	descripcion TEXT NULL, 
@@ -132,7 +131,7 @@ CREATE TABLE Tarea (
 	fechaAsignacion DATETIME NOT NULL,
 	fechaCumplimiento DATETIME NULL, 
 	costoCalculado DECIMAL(18,0) NOT NULL CHECK(costoCalculado >= 0), 
-	costoReal DECIMAL(18,0) NOT NULL CHECK(costoCalculado >= 0)
+	costoReal DECIMAL(18,0) NOT NULL CHECK(costoReal >= 0)
 );
 
 CREATE TABLE Area (
@@ -142,8 +141,8 @@ CREATE TABLE Area (
 );
 
 CREATE TABLE ProyectoArea (
-	idfProyecto INT NOT NULL FOREIGN KEY REFERENCES Proyecto(idpProyecto), 
-	idfArea INT NOT NULL FOREIGN KEY REFERENCES Area(idpArea),
+	idfProyecto INT NOT NULL FOREIGN KEY REFERENCES Proyecto(idpProyecto) ON DELETE CASCADE, 
+	idfArea INT NOT NULL FOREIGN KEY REFERENCES Area(idpArea) ON DELETE CASCADE,
 	CONSTRAINT idpProyectoArea PRIMARY KEY(idfProyecto, idfArea)
 );
 
@@ -157,16 +156,16 @@ CREATE TABLE Archivo (
 
 CREATE TABLE TareaArchivoProyecto (
 	idpTareaArchivoProyecto INT NOT NULL PRIMARY KEY, 
-	idfTarea INT NOT NULL FOREIGN KEY REFERENCES Tarea(idpTarea),
-	idfArchivo INT NOT NULL FOREIGN KEY REFERENCES Archivo(idpArchivo),
-	idfProyecto INT NOT NULL FOREIGN KEY REFERENCES Proyecto(idpProyecto)
+	idfTarea INT NOT NULL FOREIGN KEY REFERENCES Tarea(idpTarea) ON DELETE CASCADE,
+	idfArchivo INT NOT NULL FOREIGN KEY REFERENCES Archivo(idpArchivo) ON DELETE CASCADE,
+	idfProyecto INT NOT NULL FOREIGN KEY REFERENCES Proyecto(idpProyecto) ON DELETE CASCADE
 );
 
 -- 	fechaRegistro DATETIME NOT NULL CHECK(fechaRegistro >= fechaAsignacion),
 CREATE TABLE RegistroHoraUsuario (
 	idpRegistroHoraUsuario INT NOT NULL PRIMARY KEY, 
-	idfRolUsuarioProyecto INT NOT NULL FOREIGN KEY REFERENCES RolUsuarioProyecto(idpRolUsuarioProyecto),
-	idfTareaArchivoProyecto INT NOT NULL FOREIGN KEY REFERENCES TareaArchivoProyecto(idpTareaArchivoProyecto),
+	idfRolUsuarioProyecto INT NOT NULL FOREIGN KEY REFERENCES RolUsuarioProyecto(idpRolUsuarioProyecto) ON DELETE NO ACTION,
+	idfTareaArchivoProyecto INT NOT NULL FOREIGN KEY REFERENCES TareaArchivoProyecto(idpTareaArchivoProyecto) ON DELETE NO ACTION,
 	cantidadHoras INT NOT NULL CHECK(cantidadHoras BETWEEN 0 AND 40),
 	fechaRegistro DATETIME NOT NULL,
 	observacion TEXT NULL
