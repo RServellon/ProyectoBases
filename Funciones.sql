@@ -94,5 +94,7 @@ RETURN (
 	GROUP BY RUP.idfProyecto
 )
 
+exec prc_ins_codigos
+
 SELECT * FROM dbo.funCantidadParticipantesPorProyecto();
 DROP FUNCTION funCantidadParticipantesPorProyecto;

@@ -4,6 +4,12 @@
 -- Faltan datos de prueba de Archivo, Tarea-Archivo-Proyecto y RegistroHoraUsuario 
 
 -- Se borran las secuencias
+
+SET DATEFORMAT ymd
+DECLARE @dt DATETIME2 = '2016-01-02 12:03:28'
+SELECT @dt AS 'date from YMD Format'
+
+
 DROP SEQUENCE secRol;
 DROP SEQUENCE secUsuario;
 DROP SEQUENCE secPermiso;
@@ -74,10 +80,10 @@ CREATE SEQUENCE secRegistroHoraUsuario
 -- Se crean las tablas
 CREATE TABLE Permiso (
 	idpPermiso INT NOT NULL PRIMARY KEY,
-	crear INT NOT NULL UNIQUE CHECK(crear = 1 OR crear = 0),
-	leer INT NOT NULL UNIQUE CHECK(leer = 1 OR leer = 0),
-	borrar INT NOT NULL UNIQUE CHECK(borrar = 1 OR borrar = 0),
-	actualizar INT NOT NULL UNIQUE CHECK(actualizar = 1 OR actualizar = 0)
+	crear INT NOT NULL  CHECK(crear = 1 OR crear = 0),
+	leer INT NOT NULL  CHECK(leer = 1 OR leer = 0),
+	borrar INT NOT NULL  CHECK(borrar = 1 OR borrar = 0),
+	actualizar INT NOT NULL  CHECK(actualizar = 1 OR actualizar = 0)
 )
 
 CREATE TABLE Rol (
@@ -193,6 +199,8 @@ INSERT INTO Rol VALUES(NEXT VALUE FOR secRol, 'Coor', 'Coordinador', 3);
 INSERT INTO Rol VALUES(NEXT VALUE FOR secRol, 'Part', 'Participante', 2);
 SELECT * FROM Rol;
 
+
+
 INSERT INTO Usuario VALUES(NEXT VALUE FOR secUsuario, '100', 'Pedro', 'Gonzales', 'pedro@gmail.com', 11111111, 20000);
 INSERT INTO Usuario VALUES(NEXT VALUE FOR secUsuario, '101', 'Felipe', 'Campos', 'felipe@gmail.com', 22222222, 20000);
 INSERT INTO Usuario VALUES(NEXT VALUE FOR secUsuario, '102', 'Maria', 'Ramirez', 'maria@gmail.com', 33333333, 20000);
@@ -202,13 +210,15 @@ INSERT INTO Usuario VALUES(NEXT VALUE FOR secUsuario, '105', 'Monica', 'Hernande
 INSERT INTO Usuario VALUES(NEXT VALUE FOR secUsuario, '106', 'Jose', 'Murillo', 'jose@gmail.com', 77777777, 10000);
 SELECT * FROM Usuario;
 
+
 INSERT INTO Proyecto VALUES(NEXT VALUE FOR secProyecto, 'P-AAAA-2020-1', 'Sistema Control de Costos', 'SCC', 'administracion', 'Sistema que lleve un control de los costos del area de Recursos Humanos, incluyecto los correspondientes a productos, servicios y empleados', '2020-04-11', NULL, 0, 0);
 INSERT INTO Proyecto VALUES(NEXT VALUE FOR secProyecto, 'E-BBBB-2022-1', 'Sistema Gestion de Proyectos', 'SGPTI', 'estudio', NULL, '2022-03-31', NULL, 0, 0);
 INSERT INTO Proyecto VALUES(NEXT VALUE FOR secProyecto, 'E-CCCC-2021-2', 'Sistema Gestion de Archivos', 'SGAR', 'estudio', NULL, '2021-05-30', NULL, 0, 0);
 SELECT * FROM Proyecto;
 
+
 INSERT INTO RolUsuarioProyecto VALUES(NEXT VALUE FOR secRolUsuarioProyecto, '100', 1, 1, '2020-04-11', NULL);
-INSERT INTO RolUsuarioProyecto VALUES(NEXT VALUE FOR secRolUsuarioProyecto, '101', 1, 2, '2022-03-31', NULL);
+INSERT INTO RolUsuarioProyecto VALUES(NEXT VALUE FOR secRolUsuarioProyecto, '101', 1, 2, '2020-04-11', NULL);
 INSERT INTO RolUsuarioProyecto VALUES(NEXT VALUE FOR secRolUsuarioProyecto, '102', 1, 3, '2021-05-30', NULL);
 INSERT INTO RolUsuarioProyecto VALUES(NEXT VALUE FOR secRolUsuarioProyecto, '103', 2, 1, '2020-04-11', NULL);
 INSERT INTO RolUsuarioProyecto VALUES(NEXT VALUE FOR secRolUsuarioProyecto, '104', 2, 2, '2022-03-31', NULL);
@@ -217,6 +227,8 @@ INSERT INTO RolUsuarioProyecto VALUES(NEXT VALUE FOR secRolUsuarioProyecto, '105
 INSERT INTO RolUsuarioProyecto VALUES(NEXT VALUE FOR secRolUsuarioProyecto, '106', 3, 1, '2020-05-20', NULL);
 INSERT INTO RolUsuarioProyecto VALUES(NEXT VALUE FOR secRolUsuarioProyecto, '106', 3, 2, '2022-09-10', NULL);
 SELECT * FROM RolUsuarioProyecto;
+
+
 
 INSERT INTO Tarea VALUES(NEXT VALUE FOR secTarea, NULL, 'Planeacion', 18, NULL, 'completado', 1,'2022-06-14 00:00:00', NULL, 180000.0, 0.0);
 INSERT INTO Tarea VALUES(NEXT VALUE FOR secTarea, 1, 'Hacer cronograma de trabajo', 6, NULL, 'completado', 1,'2022-06-14 00:00:00', NULL, 60000.0, 0.0);
@@ -233,5 +245,6 @@ INSERT INTO ProyectoArea VALUES(1, 2);
 INSERT INTO ProyectoArea VALUES(2, 1);
 INSERT INTO ProyectoArea VALUES(3, 2);
 SELECT * FROM ProyectoArea;
+
 
 
