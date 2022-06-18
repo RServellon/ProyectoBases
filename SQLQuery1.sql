@@ -144,6 +144,14 @@ CREATE TABLE Tarea (
 	costoReal DECIMAL(18,0) NOT NULL CHECK(costoReal >= 0)
 );
 
+INSERT INTO Tarea VALUES(NEXT VALUE FOR secTarea, NULL, 'Planeacion', 18, NULL, 'completado', 1,'2022-06-14 00:00:00', NULL, 180000.0, 0.0);
+INSERT INTO Tarea VALUES(NEXT VALUE FOR secTarea, 1, 'Hacer cronograma de trabajo', 6, NULL, 'completado', 1,'2022-06-14 00:00:00', NULL, 60000.0, 0.0);
+INSERT INTO Tarea VALUES(NEXT VALUE FOR secTarea, 1, 'Oficio de inicio', 5, NULL, 'sin iniciar', 1,'2022-06-14 00:00:00', NULL, 50000.0, 0.0);
+INSERT INTO Tarea VALUES(NEXT VALUE FOR secTarea, 1, 'Organizacion del equipo de trabajo', 7, NULL, 'completado', 2,'2022-06-14 00:00:00', NULL, 70000.0, 0.0);
+INSERT INTO Tarea VALUES(NEXT VALUE FOR secTarea, 3, 'Analisis de recursos tecnicos', 5, NULL, 'completado', 1,'2022-06-14 00:00:00', NULL, 50000.0, 0.0);
+SELECT * FROM TAREA;
+DELETE FROM Tarea WHERE idpTarea = 6;
+
 CREATE TABLE Area (
 	idpArea INT NOT NULL PRIMARY KEY,
 	codigo VARCHAR(30) NOT NULL UNIQUE,
@@ -228,14 +236,6 @@ INSERT INTO RolUsuarioProyecto VALUES(NEXT VALUE FOR secRolUsuarioProyecto, '106
 INSERT INTO RolUsuarioProyecto VALUES(NEXT VALUE FOR secRolUsuarioProyecto, '106', 3, 2, '2022-09-10', NULL);
 SELECT * FROM RolUsuarioProyecto;
 
-
-
-INSERT INTO Tarea VALUES(NEXT VALUE FOR secTarea, NULL, 'Planeacion', 18, NULL, 'completado', 1,'2022-06-14 00:00:00', NULL, 180000.0, 0.0);
-INSERT INTO Tarea VALUES(NEXT VALUE FOR secTarea, 1, 'Hacer cronograma de trabajo', 6, NULL, 'completado', 1,'2022-06-14 00:00:00', NULL, 60000.0, 0.0);
-INSERT INTO Tarea VALUES(NEXT VALUE FOR secTarea, 1, 'Oficio de inicio', 5, NULL, 'sin iniciar', 1,'2022-06-14 00:00:00', NULL, 50000.0, 0.0);
-INSERT INTO Tarea VALUES(NEXT VALUE FOR secTarea, 1, 'Organizacion del equipo de trabajo', 7, NULL, 'completado', 2,'2022-06-14 00:00:00', NULL, 70000.0, 0.0);
-INSERT INTO Tarea VALUES(NEXT VALUE FOR secTarea, 3, 'Analisis de recursos tecnicos', 5, NULL, 'completado', 1,'2022-06-14 00:00:00', NULL, 50000.0, 0.0);
-SELECT * FROM TAREA;
 
 INSERT INTO Area VALUES(NEXT VALUE FOR secArea, 'PTE', 'Proyectos Tecnologicos');
 INSERT INTO Area VALUES(NEXT VALUE FOR secArea, 'RRHH', 'Recursos Humanos');

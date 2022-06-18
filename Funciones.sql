@@ -12,7 +12,7 @@ BEGIN
 	@costoCalculado DECIMAL(18,0);
 	SELECT @costoCalculado = SUM(Tarea.costoCalculado)
 	FROM Tarea 
-	WHERE idpTarea = @pIdTarea;
+	WHERE idfTarea = @pIdTarea;
 	RETURN @costoCalculado;
 END
 
@@ -98,3 +98,21 @@ exec prc_ins_codigos
 
 SELECT * FROM dbo.funCantidadParticipantesPorProyecto();
 DROP FUNCTION funCantidadParticipantesPorProyecto;
+
+CREATE FUNCTION dbo.funCantidadProyectosPorArea (
+@pIdArea INT
+)
+RETURNS INT AS
+BEGIN
+DECLARE
+@pCantidad INT;
+SELECT @pCantidad = COUNT(*)
+FROM ProyectoArea
+WHERE idfArea = @pIdArea;
+RETURN @pCantidad;
+END
+
+select * from Proyecto;
+select * from ProyectoArea;
+SELECT dbo.funCantidadProyectosPorArea(2) AS CantidadProyectos;
+DROP FUNCTION funCantidadProyectosPorArea;
