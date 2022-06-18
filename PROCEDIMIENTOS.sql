@@ -148,7 +148,7 @@ END;
 GO
 
 
---Procedimientos Delete
+-- --------------------Procedimientos Delete
 CREATE PROCEDURE uspDeletePermiso(
 @pIdpPermiso INT) 
 AS
@@ -249,10 +249,157 @@ where  idpRegistroHoraUsuario=@pIdpRegistroHoraUsuario;
 END;
 GO
 
+-- --------------------Procedimientos Update
+
+CREATE PROCEDURE uspUpdatePermiso (
+@pIdpPermiso INT,
+@pCrear INT,
+@pLeer INT, 
+@pBorrar INT,
+@pActualizar INT) 
+AS
+BEGIN
+UPDATE Permiso SET crear = @pCrear, leer = @pLeer, borrar = @pBorrar, actualizar = @pActualizar
+WHERE idpPermiso = @pIdpPermiso;
+END;
+GO
+
+CREATE PROCEDURE uspUpdateRol (
+@pIdpRol INT,
+@pCodigo VARCHAR(15), 
+@pNombre VARCHAR(30),
+@pPermiso INT)
+AS
+BEGIN;
+UPDATE Rol SET codigo = @pcodigo, nombre = @pNombre, permiso = @pPermiso
+WHERE idpRol = @pIdpRol;
+END;
+GO
 
 
+CREATE PROCEDURE uspUpdateUsuario (
+@pIdpUsuario INT,
+@pCorreo VARCHAR(60),
+@pTelefono VARCHAR(20),
+@pcostoHora DECIMAL(18,0)) 
+AS
+BEGIN
+UPDATE Usuario SET correo=@pCorreo, telefono = @pTelefono, costoHora = @pcostoHora
+WHERE idpUsuario = @pIdpUsuario;
+END;
+GO
 
+CREATE PROCEDURE uspUpdateProyecto(
+@pidpProyecto INT,
+@pCodigo VARCHAR(30), 
+@pNombre VARCHAR(60), 
+@pSiglas VARCHAR(10), 
+@pEstado VARCHAR(20),
+@pDescripcion TEXT, 
+@pfechaInicio DATETIME,
+@pfechaCierre DATETIME,
+@pCostoCalculado DECIMAL(18,0),
+@pCostoReal DECIMAL(18,0)) 
+AS
+BEGIN
+UPDATE Proyecto SET codigo = @pCodigo, nombre = @pNombre, siglas =@pSiglas, estado = @pEstado, descripcion = @pDescripcion,
+	   fechaInicio = @pfechaInicio, fechaCierre = @pfechaCierre, costoCalculado = @pCostoCalculado, costoReal = @pCostoReal
+WHERE idpProyecto = @pidpProyecto;
+END;
+GO
 
+CREATE PROCEDURE uspUpdateRolUsuarioProyecto(
+@pidpRolUsuarioProyecto INT,
+@pIdUsuario VARCHAR(15), 
+@pIdfRol INT, 
+@pidfProyecto INT, 
+@pFechaAsignacion DATETIME,
+@pFechaDesasignacion DATETIME) 
+AS
+BEGIN
+UPDATE RolUsusarioProyecto SET idUsuario = @pIdUsuario, idRol =@pIdfRol, idfProyecto = @pidfProyecto, 
+	   fechaAsignacion = @pFechaAsignacion, fechaDesasignacion =@pFechaDesasignacion
+WHERE idRolUsuarioProyecto = @pidpRolUsuarioProyecto;
+END;
+GO
+
+CREATE PROCEDURE uspUpdateTarea(
+@pidpTarea INT,
+@pIdfTarea  INT, 
+@pNombre VARCHAR(100), 
+@pDuracionHora INT,
+@pDescripcion TEXT,
+@pEstado VARCHAR(15),
+@pPrioridad INT,
+@pFechaAsignacion DATETIME,
+@pFechaCumplimiento DATETIME,
+@pCostoCalculado DECIMAL(18,0),
+@pCostoReal DECIMAL(18,0)) 
+AS
+BEGIN
+UPDATE Terea SET idfTarea = @pIdfTarea,nombre = @pNombre, duracionHora = @pDuracionHora,descripcion = @pDescripcion,estado = @pEstado,
+	   prioridad = @pPrioridad,fechaAsignacion = @pFechaAsignacion,fechaCumplimiento = @pFechaCumplimiento,costoCalculado = @pCostoCalculado,
+	   costoReal = @pCostoReal
+WHERE idpTarea = @pidpTarea;
+END;
+GO
+
+CREATE PROCEDURE uspUpdateArea (
+@pidpArea INT,
+@pCodigo VARCHAR(30), 
+@pNombre VARCHAR(30))
+AS
+BEGIN
+UPDATE Area SET codigo = @pCodigo,nombre = @pNombre 
+WHERE idpArea = @pidpArea;
+END;
+GO
+
+CREATE PROCEDURE uspUpdateProyectoArea (
+@pIdfProyecto INT, 
+@pIdfArea INT)
+AS
+BEGIN
+UPDATE ProyectoArea SET idfProyecto = @pIdfProyecto,idfArea = @pIdfArea 
+WHERE 
+END;
+GO
+
+CREATE PROCEDURE uspInsertArchivo (
+@pCodigo VARCHAR(30), 
+@pNombre VARCHAR(50),
+@pArchivo VARBINARY(MAX),
+@pObservacion TEXT)
+AS
+BEGIN
+INSERT INTO Archivo(idpArchivo,codigo,nombre,archivo,observacion) 
+VALUES(NEXT VALUE FOR secArchivo, @pCodigo,@pNombre,@pArchivo,@pObservacion);
+END;
+GO
+
+CREATE PROCEDURE uspInsertTareaArchivoProyecto (
+@pIdfTarea INT, 
+@pIdfArchivo INT,
+@pidfProyecto INT)
+AS
+BEGIN
+INSERT INTO TareaArchivoProyecto(idpTareaArchivoProyecto,idfTarea,idfArchivo,idfProyecto) 
+VALUES(NEXT VALUE FOR secTareaArchivoProyecto,@pIdfTarea ,@pIdfArchivo,@pidfProyecto);
+END;
+GO
+
+CREATE PROCEDURE uspInsertRegistroHoraUsuario(
+@pIdfRolUsuarioProyecto INT, 
+@pIdfTareaArchivoProyecto INT,
+@pCantidadHoras INT,
+@pFechaRegistro DATETIME,
+@pObservacion TEXT)
+AS
+BEGIN
+INSERT INTO RegistroHoraUsuario(idpRegistroHoraUsuario,idfRolUsuarioProyecto,idfTareaArchivoProyecto,cantidadHoras,fechaRegistro,observacion) 
+VALUES(NEXT VALUE FOR secRegistroHoraUsuario,@pIdfRolUsuarioProyecto ,@pIdfTareaArchivoProyecto,@pCantidadHoras,@pFechaRegistro,@pObservacion);
+END;
+GO
 
 
 
@@ -325,6 +472,7 @@ EXEC uspInsertProyectoArea 2, 1;
 EXEC uspInsertProyectoArea 3, 2;
 SELECT * FROM ProyectoArea;
 
+EXEC uspInsertArchivo 
 
 --PRUEBAS  DE PROCEDIMIENTOS DELETE
 
@@ -375,3 +523,15 @@ DROP PROCEDURE uspDeleteProyectoArea;
 DROP PROCEDURE uspDeleteArchivo;
 DROP PROCEDURE uspDeleteTareaArchivoProyecto;
 DROP PROCEDURE uspDeleteRegistroHoraUsuario;
+
+DROP PROCEDURE uspUpdatePermiso;
+DROP PROCEDURE uspUpdateRol;
+DROP PROCEDURE uspUpdateUsuario;
+DROP PROCEDURE uspUpdateProyecto;
+DROP PROCEDURE uspUpdateRolUsuarioProyecto;
+DROP PROCEDURE uspUpdateTarea;
+DROP PROCEDURE uspUpdateArea;
+DROP PROCEDURE uspUpdateProyectoArea;
+DROP PROCEDURE uspUpdateArchivo;
+DROP PROCEDURE uspUpdateTareaArchivoProyecto;
+DROP PROCEDURE uspUpdateRegistroHoraUsuario;

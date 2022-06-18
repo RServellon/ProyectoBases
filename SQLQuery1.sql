@@ -164,7 +164,7 @@ CREATE TABLE Archivo (
 	observacion TEXT NULL
 );
 
--- No sé cómo se suben los archivos
+-- No sï¿½ cï¿½mo se suben los archivos
 -- INSERT INTO Archivo VALUES(NEXT VALUE FOR secArchivo, 'ACT-Pv5', 'Acta de constitucion', CAST('acta' AS VARBINARY(MAX)), NULL);
 -- INSERT INTO Archivo VALUES(NEXT VALUE FOR secArchivo);
 -- INSERT INTO Archivo VALUES(NEXT VALUE FOR secArchivo);
