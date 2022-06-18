@@ -190,7 +190,7 @@ CREATE TABLE RegistroHoraUsuario (
 	idpRegistroHoraUsuario INT NOT NULL PRIMARY KEY, 
 	idfRolUsuarioProyecto INT NOT NULL FOREIGN KEY REFERENCES RolUsuarioProyecto(idpRolUsuarioProyecto) ON DELETE NO ACTION,
 	idfTareaArchivoProyecto INT NOT NULL FOREIGN KEY REFERENCES TareaArchivoProyecto(idpTareaArchivoProyecto) ON DELETE NO ACTION,
-	cantidadHoras INT NOT NULL CHECK(cantidadHoras BETWEEN 0 AND 40),
+	cantidadHoras INT NOT NULL CHECK(cantidadHoras BETWEEN 1 AND 40),
 	fechaRegistro DATETIME NOT NULL,
 	observacion TEXT NULL
 );

@@ -99,6 +99,7 @@ exec prc_ins_codigos
 SELECT * FROM dbo.funCantidadParticipantesPorProyecto();
 DROP FUNCTION funCantidadParticipantesPorProyecto;
 
+-- Retorna cantidad de proyectos por area
 CREATE FUNCTION dbo.funCantidadProyectosPorArea (
 @pIdArea INT
 )
@@ -116,3 +117,39 @@ select * from Proyecto;
 select * from ProyectoArea;
 SELECT dbo.funCantidadProyectosPorArea(2) AS CantidadProyectos;
 DROP FUNCTION funCantidadProyectosPorArea;
+
+
+-- Reciba id del usuario y retorne el salario por hora
+CREATE FUNCTION dbo.funRetornaSalarioPorIdUsuario (
+	@pIdUsuario INT
+)
+RETURNS DECIMAL(18,0) AS
+BEGIN
+	DECLARE
+	@salario DECIMAL(18,0);
+	SELECT @salario = costoHora
+	FROM Usuario
+	WHERE identificacion = @pIdUsuario;
+	RETURN @salario;
+END
+
+SELECT dbo.funRetornaSalarioPorIdUsuario('104') AS costoHora;
+DROP FUNCTION funRetornaSalarioPorIdUsuario;
+
+
+-- Reciba id del registro y retorne el salario por hora
+CREATE FUNCTION dbo.funRetornaSalarioPorRegistroAsignacion (
+	@pIdRegistro INT
+)
+RETURNS DECIMAL(18,0) AS
+BEGIN
+	DECLARE
+	@salario DECIMAL(18,0);
+	SELECT @salario = dbo.funRetornaSalarioPorIdUsuario(RUP.idUsuario)
+	FROM RolUsuarioProyecto AS RUP
+	WHERE idpRolUsuarioProyecto = @pIdRegistro;
+	RETURN @salario;
+END
+
+SELECT dbo.funRetornaSalarioPorRegistroAsignacion(1) AS costoHora;
+DROP FUNCTION funRetornaSalarioPorRegistroAsignacion;
