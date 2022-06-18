@@ -26,6 +26,7 @@ DROP TABLE RegistroHoraUsuario;
 DROP TABLE RolUsuarioProyecto;
 DROP TABLE TareaArchivoProyecto;
 DROP TABLE ProyectoArea;
+DROP TABLE UsuarioArea;
 DROP TABLE Rol;
 DROP TABLE Permiso;
 DROP TABLE Usuario;
@@ -156,6 +157,12 @@ CREATE TABLE Area (
 	idpArea INT NOT NULL PRIMARY KEY,
 	codigo VARCHAR(30) NOT NULL UNIQUE,
 	nombre VARCHAR(30) NOT NULL UNIQUE
+);
+
+CREATE TABLE UsuarioArea (
+	idfUsuario VARCHAR(15) NOT NULL FOREIGN KEY REFERENCES Usuario(identificacion) ON DELETE CASCADE, 
+	idfArea INT NOT NULL FOREIGN KEY REFERENCES Area(idpArea) ON DELETE CASCADE,
+	CONSTRAINT idpUsuarioArea PRIMARY KEY(idfUsuario, idfArea)
 );
 
 CREATE TABLE ProyectoArea (
