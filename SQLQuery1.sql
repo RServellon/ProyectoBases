@@ -26,6 +26,7 @@ DROP TABLE RegistroHoraUsuario;
 DROP TABLE RolUsuarioProyecto;
 DROP TABLE TareaArchivoProyecto;
 DROP TABLE ProyectoArea;
+DROP TABLE UsuarioArea;
 DROP TABLE Rol;
 DROP TABLE Permiso;
 DROP TABLE Usuario;
@@ -144,10 +145,24 @@ CREATE TABLE Tarea (
 	costoReal DECIMAL(18,0) NOT NULL CHECK(costoReal >= 0)
 );
 
+INSERT INTO Tarea VALUES(NEXT VALUE FOR secTarea, NULL, 'Planeacion', 18, NULL, 'completado', 1,'2022-06-14 00:00:00', NULL, 180000.0, 0.0);
+INSERT INTO Tarea VALUES(NEXT VALUE FOR secTarea, 1, 'Hacer cronograma de trabajo', 6, NULL, 'completado', 1,'2022-06-14 00:00:00', NULL, 60000.0, 0.0);
+INSERT INTO Tarea VALUES(NEXT VALUE FOR secTarea, 1, 'Oficio de inicio', 5, NULL, 'sin iniciar', 1,'2022-06-14 00:00:00', NULL, 50000.0, 0.0);
+INSERT INTO Tarea VALUES(NEXT VALUE FOR secTarea, 1, 'Organizacion del equipo de trabajo', 7, NULL, 'completado', 2,'2022-06-14 00:00:00', NULL, 70000.0, 0.0);
+INSERT INTO Tarea VALUES(NEXT VALUE FOR secTarea, 3, 'Analisis de recursos tecnicos', 5, NULL, 'completado', 1,'2022-06-14 00:00:00', NULL, 50000.0, 0.0);
+SELECT * FROM TAREA;
+DELETE FROM Tarea WHERE idpTarea = 6;
+
 CREATE TABLE Area (
 	idpArea INT NOT NULL PRIMARY KEY,
 	codigo VARCHAR(30) NOT NULL UNIQUE,
 	nombre VARCHAR(30) NOT NULL UNIQUE
+);
+
+CREATE TABLE UsuarioArea (
+	idfUsuario VARCHAR(15) NOT NULL FOREIGN KEY REFERENCES Usuario(identificacion) ON DELETE CASCADE, 
+	idfArea INT NOT NULL FOREIGN KEY REFERENCES Area(idpArea) ON DELETE CASCADE,
+	CONSTRAINT idpUsuarioArea PRIMARY KEY(idfUsuario, idfArea)
 );
 
 CREATE TABLE ProyectoArea (
@@ -182,7 +197,7 @@ CREATE TABLE RegistroHoraUsuario (
 	idpRegistroHoraUsuario INT NOT NULL PRIMARY KEY, 
 	idfRolUsuarioProyecto INT NOT NULL FOREIGN KEY REFERENCES RolUsuarioProyecto(idpRolUsuarioProyecto) ON DELETE NO ACTION,
 	idfTareaArchivoProyecto INT NOT NULL FOREIGN KEY REFERENCES TareaArchivoProyecto(idpTareaArchivoProyecto) ON DELETE NO ACTION,
-	cantidadHoras INT NOT NULL CHECK(cantidadHoras BETWEEN 0 AND 40),
+	cantidadHoras INT NOT NULL CHECK(cantidadHoras BETWEEN 1 AND 40),
 	fechaRegistro DATETIME NOT NULL,
 	observacion TEXT NULL
 );
@@ -211,9 +226,9 @@ INSERT INTO Usuario VALUES(NEXT VALUE FOR secUsuario, '106', 'Jose', 'Murillo', 
 SELECT * FROM Usuario;
 
 
-INSERT INTO Proyecto VALUES(NEXT VALUE FOR secProyecto, 'P-AAAA-2020-1', 'Sistema Control de Costos', 'SCC', 'administracion', 'Sistema que lleve un control de los costos del area de Recursos Humanos, incluyecto los correspondientes a productos, servicios y empleados', '2020-04-11', NULL, 0, 0);
-INSERT INTO Proyecto VALUES(NEXT VALUE FOR secProyecto, 'E-BBBB-2022-1', 'Sistema Gestion de Proyectos', 'SGPTI', 'estudio', NULL, '2022-03-31', NULL, 0, 0);
-INSERT INTO Proyecto VALUES(NEXT VALUE FOR secProyecto, 'E-CCCC-2021-2', 'Sistema Gestion de Archivos', 'SGAR', 'estudio', NULL, '2021-05-30', NULL, 0, 0);
+INSERT INTO Proyecto VALUES(NEXT VALUE FOR secProyecto, 'P-AAAA-2020-1', 'Sistema Control de Costos', 'SCC', 'administracion', 'Sistema que lleve un control de los costos del area de Recursos Humanos, incluyecto los correspondientes a productos, servicios y empleados', '2020-04-11', NULL, 3000, 4000);
+INSERT INTO Proyecto VALUES(NEXT VALUE FOR secProyecto, 'E-BBBB-2022-1', 'Sistema Gestion de Proyectos', 'SGPTI', 'estudio', NULL, '2022-03-31', NULL, 1000, 2000);
+INSERT INTO Proyecto VALUES(NEXT VALUE FOR secProyecto, 'E-CCCC-2021-2', 'Sistema Gestion de Archivos', 'SGAR', 'estudio', NULL, '2021-05-30', NULL, 2000, 6500);
 SELECT * FROM Proyecto;
 
 
@@ -229,21 +244,16 @@ INSERT INTO RolUsuarioProyecto VALUES(NEXT VALUE FOR secRolUsuarioProyecto, '106
 SELECT * FROM RolUsuarioProyecto;
 
 
-
-INSERT INTO Tarea VALUES(NEXT VALUE FOR secTarea, NULL, 'Planeacion', 18, NULL, 'completado', 1,'2022-06-14 00:00:00', NULL, 180000.0, 0.0);
-INSERT INTO Tarea VALUES(NEXT VALUE FOR secTarea, 1, 'Hacer cronograma de trabajo', 6, NULL, 'completado', 1,'2022-06-14 00:00:00', NULL, 60000.0, 0.0);
-INSERT INTO Tarea VALUES(NEXT VALUE FOR secTarea, 1, 'Oficio de inicio', 5, NULL, 'sin iniciar', 1,'2022-06-14 00:00:00', NULL, 50000.0, 0.0);
-INSERT INTO Tarea VALUES(NEXT VALUE FOR secTarea, 1, 'Organizacion del equipo de trabajo', 7, NULL, 'completado', 2,'2022-06-14 00:00:00', NULL, 70000.0, 0.0);
-INSERT INTO Tarea VALUES(NEXT VALUE FOR secTarea, 3, 'Analisis de recursos tecnicos', 5, NULL, 'completado', 1,'2022-06-14 00:00:00', NULL, 50000.0, 0.0);
-SELECT * FROM TAREA;
-
 INSERT INTO Area VALUES(NEXT VALUE FOR secArea, 'PTE', 'Proyectos Tecnologicos');
 INSERT INTO Area VALUES(NEXT VALUE FOR secArea, 'RRHH', 'Recursos Humanos');
 SELECT * FROM Area;
 
-INSERT INTO ProyectoArea VALUES(1, 2);
+
 INSERT INTO ProyectoArea VALUES(2, 1);
 INSERT INTO ProyectoArea VALUES(3, 2);
+INSERT INTO ProyectoArea VALUES(1, 2);
+INSERT INTO ProyectoArea VALUES(1, 1);
+INSERT INTO ProyectoArea VALUES(3, 1);
 SELECT * FROM ProyectoArea;
 
 
