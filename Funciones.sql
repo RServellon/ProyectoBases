@@ -1,9 +1,9 @@
 -- Funciones
--- Ya están 6 funciones
 
 -- Calcular costo estimado de una tarea padre
 -- Se puede usar en un trigger para actualizar los valores
-CREATE FUNCTION dbo.funCalculoCostoEstimadoTarea (
+GO
+CREATE OR ALTER FUNCTION dbo.funCalculoCostoEstimadoTarea (
 	@pIdTarea INT
 )
 RETURNS DECIMAL(18,0) AS
@@ -15,13 +15,15 @@ BEGIN
 	WHERE idfTarea = @pIdTarea;
 	RETURN @costoCalculado;
 END
+GO
 
 SELECT dbo.funCalculoCostoEstimadoTarea(1) AS Costo;
-DROP FUNCTION funCalculoCostoEstimadoTarea;
+--DROP FUNCTION funCalculoCostoEstimadoTarea;
 
 -- Actualizar horas estimadas al ingresar una tarea hija
--- Se puede usr en un trigger para actualizar valores
-CREATE FUNCTION dbo.funCalculoHorasTarea (
+-- Se puede usar en un trigger para actualizar valores
+GO
+CREATE OR ALTER FUNCTION dbo.funCalculoHorasTarea (
 	@pIdTarea INT
 )
 RETURNS DECIMAL(18,0) AS
@@ -33,94 +35,15 @@ BEGIN
 	WHERE idpTarea = @pIdTarea;
 	RETURN @cantidadHoras;
 END
+GO
 
 SELECT dbo.funCalculoHorasTarea(1) AS CantidadHoras;
-DROP FUNCTION funCalculoHorasTarea;
-
--- Reciba id del proyecto y retorne el nombre
-CREATE FUNCTION dbo.funRetornaNombreProyectoPorId (
-	@pIdProyecto INT
-)
-RETURNS VARCHAR(60) AS
-BEGIN
-	DECLARE
-	@nombreProyecto VARCHAR(60);
-	SELECT @nombreProyecto = Proyecto.nombre
-	FROM Proyecto
-	WHERE idpProyecto = @pIdProyecto;
-	RETURN @nombreProyecto;
-END
-
-SELECT dbo.funRetornaNombreProyectoPorId(1) AS nombreProyecto;
-DROP FUNCTION funRetornaNombreProyectoPorId;
-
--- Reciba id del usuario y retorne el nombre
-CREATE FUNCTION dbo.funRetornaNombreUsuarioPorId (
-	@pIdUsuario VARCHAR(15)
-)
-RETURNS VARCHAR(60) AS
-BEGIN
-	DECLARE
-	@nombreUsuario VARCHAR(60);
-	SELECT @nombreUsuario = CONCAT(Usuario.nombre, ' ',  Usuario.apellido)
-	FROM Usuario
-	WHERE identificacion = @pIdUsuario;
-	RETURN @nombreUsuario;
-END
-
-SELECT dbo.funRetornaNombreUsuarioPorId('104') AS nombreUsuario;
-DROP FUNCTION funRetornaNombreUsuarioPorId;
-
--- Retornar proyectos asignados que tiene un usuario
-CREATE FUNCTION dbo.funProyectosAsignadosAUsuario (
-	@pIdUsuario VARCHAR(15)
-)
-RETURNS TABLE AS
-RETURN (
-	SELECT dbo.funRetornaNombreProyectoPorId(RUP.idfProyecto) proyectosAsignado, P.codigo codigo, P.estado estado
-	FROM RolUsuarioProyecto AS RUP, Proyecto AS P
-	WHERE RUP.idUsuario = @pIdUsuario AND P.idpProyecto = RUP.idfProyecto
-)
-
-SELECT * FROM dbo.funProyectosAsignadosAUsuario('104') AS Prueba;
-DROP FUNCTION funProyectosAsignadosAUsuario;
-
--- Retornar cantidad de participantes por proyecto
-CREATE FUNCTION dbo.funCantidadParticipantesPorProyecto ()
-RETURNS TABLE AS
-RETURN (
-	SELECT dbo.funRetornaNombreProyectoPorId(RUP.idfProyecto) proyecto, COUNT(*) participantes
-	FROM RolUsuarioProyecto AS RUP
-	GROUP BY RUP.idfProyecto
-)
-
-exec prc_ins_codigos
-
-SELECT * FROM dbo.funCantidadParticipantesPorProyecto();
-DROP FUNCTION funCantidadParticipantesPorProyecto;
-
--- Retorna cantidad de proyectos por area
-CREATE FUNCTION dbo.funCantidadProyectosPorArea (
-@pIdArea INT
-)
-RETURNS INT AS
-BEGIN
-DECLARE
-@pCantidad INT;
-SELECT @pCantidad = COUNT(*)
-FROM ProyectoArea
-WHERE idfArea = @pIdArea;
-RETURN @pCantidad;
-END
-
-select * from Proyecto;
-select * from ProyectoArea;
-SELECT dbo.funCantidadProyectosPorArea(2) AS CantidadProyectos;
-DROP FUNCTION funCantidadProyectosPorArea;
+--DROP FUNCTION funCalculoHorasTarea;
 
 
 -- Reciba id del usuario y retorne el salario por hora
-CREATE FUNCTION dbo.funRetornaSalarioPorIdUsuario (
+GO
+CREATE OR ALTER FUNCTION dbo.funRetornaSalarioPorIdUsuario (
 	@pIdUsuario INT
 )
 RETURNS DECIMAL(18,0) AS
@@ -132,13 +55,15 @@ BEGIN
 	WHERE identificacion = @pIdUsuario;
 	RETURN @salario;
 END
+GO
 
 SELECT dbo.funRetornaSalarioPorIdUsuario('104') AS costoHora;
-DROP FUNCTION funRetornaSalarioPorIdUsuario;
+--DROP FUNCTION funRetornaSalarioPorIdUsuario;
 
 
 -- Reciba id del registro y retorne el salario por hora
-CREATE FUNCTION dbo.funRetornaSalarioPorRegistroAsignacion (
+GO
+CREATE OR ALTER FUNCTION dbo.funRetornaSalarioPorRegistroAsignacion (
 	@pIdRegistro INT
 )
 RETURNS DECIMAL(18,0) AS
@@ -150,6 +75,7 @@ BEGIN
 	WHERE idpRolUsuarioProyecto = @pIdRegistro;
 	RETURN @salario;
 END
+GO
 
 SELECT dbo.funRetornaSalarioPorRegistroAsignacion(1) AS costoHora;
-DROP FUNCTION funRetornaSalarioPorRegistroAsignacion;
+--DROP FUNCTION funRetornaSalarioPorRegistroAsignacion;
