@@ -226,9 +226,9 @@ INSERT INTO Usuario VALUES(NEXT VALUE FOR secUsuario, '106', 'Jose', 'Murillo', 
 SELECT * FROM Usuario;
 
 
-INSERT INTO Proyecto VALUES(NEXT VALUE FOR secProyecto, 'P-AAAA-2020-1', 'Sistema Control de Costos', 'SCC', 'administracion', 'Sistema que lleve un control de los costos del area de Recursos Humanos, incluyecto los correspondientes a productos, servicios y empleados', '2020-04-11', NULL, 0, 0);
-INSERT INTO Proyecto VALUES(NEXT VALUE FOR secProyecto, 'E-BBBB-2022-1', 'Sistema Gestion de Proyectos', 'SGPTI', 'estudio', NULL, '2022-03-31', NULL, 0, 0);
-INSERT INTO Proyecto VALUES(NEXT VALUE FOR secProyecto, 'E-CCCC-2021-2', 'Sistema Gestion de Archivos', 'SGAR', 'estudio', NULL, '2021-05-30', NULL, 0, 0);
+INSERT INTO Proyecto VALUES(NEXT VALUE FOR secProyecto, 'P-AAAA-2020-1', 'Sistema Control de Costos', 'SCC', 'administracion', 'Sistema que lleve un control de los costos del area de Recursos Humanos, incluyecto los correspondientes a productos, servicios y empleados', '2020-04-11', NULL, 3000, 4000);
+INSERT INTO Proyecto VALUES(NEXT VALUE FOR secProyecto, 'E-BBBB-2022-1', 'Sistema Gestion de Proyectos', 'SGPTI', 'estudio', NULL, '2022-03-31', NULL, 1000, 2000);
+INSERT INTO Proyecto VALUES(NEXT VALUE FOR secProyecto, 'E-CCCC-2021-2', 'Sistema Gestion de Archivos', 'SGAR', 'estudio', NULL, '2021-05-30', NULL, 2000, 6500);
 SELECT * FROM Proyecto;
 
 
@@ -248,9 +248,12 @@ INSERT INTO Area VALUES(NEXT VALUE FOR secArea, 'PTE', 'Proyectos Tecnologicos')
 INSERT INTO Area VALUES(NEXT VALUE FOR secArea, 'RRHH', 'Recursos Humanos');
 SELECT * FROM Area;
 
-INSERT INTO ProyectoArea VALUES(1, 2);
+
 INSERT INTO ProyectoArea VALUES(2, 1);
 INSERT INTO ProyectoArea VALUES(3, 2);
+INSERT INTO ProyectoArea VALUES(1, 2);
+INSERT INTO ProyectoArea VALUES(1, 1);
+INSERT INTO ProyectoArea VALUES(3, 1);
 SELECT * FROM ProyectoArea;
 
 
