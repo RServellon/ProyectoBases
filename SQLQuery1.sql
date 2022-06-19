@@ -202,13 +202,14 @@ CREATE TABLE RegistroHoraUsuario (
 	observacion TEXT NULL
 );
 
-
 INSERT INTO Permiso VALUES(NEXT VALUE FOR secPermiso, 1, 1, 1, 1);
 INSERT INTO Permiso VALUES(NEXT VALUE FOR secPermiso, 0, 1, 0, 0);
 INSERT INTO Permiso VALUES(NEXT VALUE FOR secPermiso, 0, 1, 0, 1);
 SELECT * FROM Permiso;
 
 
+
+INSERT INTO Rol VALUES(NEXT VALUE FOR secRol, 'Admin', 'Administrador', 1);
 INSERT INTO Rol VALUES(NEXT VALUE FOR secRol, 'Admin', 'Administrador', 1);
 INSERT INTO Rol VALUES(NEXT VALUE FOR secRol, 'Coor', 'Coordinador', 3);
 INSERT INTO Rol VALUES(NEXT VALUE FOR secRol, 'Part', 'Participante', 2);

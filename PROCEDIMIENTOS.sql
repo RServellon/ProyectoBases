@@ -147,6 +147,16 @@ VALUES(NEXT VALUE FOR secRegistroHoraUsuario,@pIdfRolUsuarioProyecto ,@pIdfTarea
 END;
 GO
 
+CREATE PROCEDURE uspInsertUsuarioArea (
+@pIidfUsuario VARCHAR(15), 
+@pIdfArea INT)
+AS
+BEGIN
+INSERT INTO UsuarioArea(idfUsuario,idfArea) 
+VALUES( @pIidfUsuario,@pIdfArea);
+END;
+GO
+
 
 -- --------------------Procedimientos Delete
 CREATE PROCEDURE uspDeletePermiso(
@@ -246,6 +256,16 @@ AS
 BEGIN
 DELETE FROM  RegistroHoraUsuario
 where  idpRegistroHoraUsuario=@pIdpRegistroHoraUsuario;
+END;
+GO
+
+CREATE PROCEDURE uspDeleteUsuarioArea(
+@pIidfUsuario VARCHAR(15),
+@pDfArea INT) 
+AS
+BEGIN
+DELETE FROM UsuarioArea 
+where  idfUsuario=@pDfArea AND idfArea=@pDfArea;
 END;
 GO
 
@@ -405,6 +425,16 @@ WHERE idpRegistroHoraUsuario = @pIdpRegistroHoraUsuario;
 END;
 GO
 
+CREATE PROCEDURE uspUpdateUsuarioArea (
+@pIidfUsuario VARCHAR(15), 
+@pIdfArea INT)
+AS
+BEGIN
+UPDATE UsuarioArea SET idfUsuario =@pIidfUsuario ,idfArea = @pIdfArea 
+WHERE idfUsuario =@pIidfUsuario  AND idfArea = @pIdfArea;
+END;
+GO
+
 
 
 
@@ -541,6 +571,7 @@ DROP PROCEDURE uspInsertProyectoArea;
 DROP PROCEDURE uspInsertArchivo;
 DROP PROCEDURE uspInsertTareaArchivoProyecto;
 DROP PROCEDURE uspInsertRegistroHoraUsuario;
+DROP PROCEDURE uspInsertUsuarioArea;
 
 DROP PROCEDURE uspDeletePermiso;
 DROP PROCEDURE uspDeleteRol;
@@ -553,6 +584,7 @@ DROP PROCEDURE uspDeleteProyectoArea;
 DROP PROCEDURE uspDeleteArchivo;
 DROP PROCEDURE uspDeleteTareaArchivoProyecto;
 DROP PROCEDURE uspDeleteRegistroHoraUsuario;
+DROP PROCEDURE uspDeleteUsuarioArea;
 
 DROP PROCEDURE uspUpdatePermiso;
 DROP PROCEDURE uspUpdateRol;
@@ -565,3 +597,4 @@ DROP PROCEDURE uspUpdateProyectoArea;
 DROP PROCEDURE uspUpdateArchivo;
 DROP PROCEDURE uspUpdateTareaArchivoProyecto;
 DROP PROCEDURE uspUpdateRegistroHoraUsuario;
+DROP PROCEDURE uspUpdateUsuarioArea;
