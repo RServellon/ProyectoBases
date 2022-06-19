@@ -1,7 +1,8 @@
 -- Funciones
 
--- Calcular costo estimado de una tarea padre
--- Se puede usar en un trigger para actualizar los valores
+-- Función 1: Calcular costo estimado de una tarea padre
+-- Se puede usar al agregar, eliminar o actualizar una tarea y se deba
+-- de volver a calcular el costo estimado de su tarea padre
 GO
 CREATE OR ALTER FUNCTION dbo.funCalculoCostoEstimadoTarea (
 	@pIdTarea INT
@@ -20,8 +21,10 @@ GO
 SELECT dbo.funCalculoCostoEstimadoTarea(1) AS Costo;
 --DROP FUNCTION funCalculoCostoEstimadoTarea;
 
--- Actualizar horas estimadas al ingresar una tarea hija
--- Se puede usar en un trigger para actualizar valores
+
+-- Función 2: Calcular horas estimadas de una tarea padre
+-- Se puede usar al agregar, eliminar o actualizar una tarea y se deba
+-- de volver a calcular la duración estimada de su tarea padre
 GO
 CREATE OR ALTER FUNCTION dbo.funCalculoHorasTarea (
 	@pIdTarea INT
@@ -41,7 +44,8 @@ SELECT dbo.funCalculoHorasTarea(1) AS CantidadHoras;
 --DROP FUNCTION funCalculoHorasTarea;
 
 
--- Reciba id del usuario y retorne el salario por hora
+-- Función 3: Reciba id del usuario por parámetro
+-- y retorne su salario por hora
 GO
 CREATE OR ALTER FUNCTION dbo.funRetornaSalarioPorIdUsuario (
 	@pIdUsuario INT
@@ -61,7 +65,8 @@ SELECT dbo.funRetornaSalarioPorIdUsuario('104') AS costoHora;
 --DROP FUNCTION funRetornaSalarioPorIdUsuario;
 
 
--- Reciba id del registro y retorne el salario por hora
+-- Función 4: Reciba id del registro de asignación de un usuario a un proyecto
+-- por parámetro y retorne el salario por hora correspondiente al usuario
 GO
 CREATE OR ALTER FUNCTION dbo.funRetornaSalarioPorRegistroAsignacion (
 	@pIdRegistro INT
@@ -76,6 +81,27 @@ BEGIN
 	RETURN @salario;
 END
 GO
-
+select * from RolUsuarioProyecto;
 SELECT dbo.funRetornaSalarioPorRegistroAsignacion(1) AS costoHora;
 --DROP FUNCTION funRetornaSalarioPorRegistroAsignacion;
+
+
+-- Función 5: Reciba id de la tarea por parámetro
+-- y retorne su duracion en horas
+GO
+CREATE OR ALTER FUNCTION dbo.funRetornaDuracionPorIdTarea (
+	@pDuracion INT
+)
+RETURNS INT AS
+BEGIN
+	DECLARE
+	@duracion INT;
+	SELECT @duracion = Tarea.duracionHora
+	FROM Tarea
+	WHERE identificacion = @pIdUsuario;
+	RETURN @salario;
+END
+GO
+
+SELECT dbo.funRetornaSalarioPorIdUsuario('104') AS costoHora;
+--DROP FUNCTION funRetornaSalarioPorIdUsuario;
