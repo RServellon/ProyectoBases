@@ -45,58 +45,33 @@ CREATE OR ALTER TRIGGER trigBeforeUpdateProyecto
 			from INSERTED;
 END
 
+--Listo
+CREATE OR ALTER TRIGGER trigBeforeInsertRegistroHoraUsuario
+	ON dbo.RegistroHoraUsuario INSTEAD OF INSERT AS BEGIN
+	
+	DECLARE @idfRolUsuarioProyecto  INT, @idfTareaArchivoProyecto INT, @fechaRegistro DATETIME, 
+	@idpProyecto int, @idpProyectoFromUser int ,  @idUsuario VARCHAR(15), @fechaInicio DATETIME, @fechaCierre DATETIME, @msg varchar(10)
+
+	
+
+	SELECT @idfRolUsuarioProyecto = idfRolUsuarioProyecto FROM INSERTED
+	SELECT @idfTareaArchivoProyecto = idfTareaArchivoProyecto FROM INSERTED
+	SELECT @fechaRegistro = fechaRegistro FROM INSERTED
+
+	SELECT @idpProyecto = idfProyecto FROM TareaArchivoProyecto where idpTareaArchivoProyecto = @idfTareaArchivoProyecto;
+	SELECT @idpProyectoFromUser = idfProyecto FROM RolUsuarioProyecto where idpRolUsuarioProyecto = @idfRolUsuarioProyecto;
+
+	SELECT @fechaInicio = fechaInicio FROM Proyecto where idpProyecto = @idpProyectoFromUser;
+	SELECT @fechaCierre = fechaCierre FROM Proyecto where idpProyecto = @idpProyectoFromUser;
+
+	IF    @idpProyecto != @idpProyectoFromUser
+		RAISERROR ( 'Este usuario no pertenece a el proyecto registrado',11,1);
+	ELSE IF @fechaRegistro NOT BETWEEN @fechaInicio AND @fechaCierre
+		RAISERROR ( 'La fecha de registro debe encajar en el rango del proyecto',11,1);
+	ELSE 
+		INSERT INTO RegistroHoraUsuario 
+		SELECT * FROM INSERTED;
+END
 
 
 
-CREATE TABLE Proyecto ( 
-	idpProyecto INT NOT NULL PRIMARY KEY,
-	codigo VARCHAR(30) NOT NULL UNIQUE,
-	nombre VARCHAR(60) NOT NULL,
-	siglas VARCHAR(10) NOT NULL UNIQUE,
-	estado VARCHAR(20) NOT NULL CHECK(estado IN('estudio', 'administracion','post')),
-	descripcion TEXT NULL, 
-	fechaInicio DATETIME NOT NULL, 
-	fechaCierre DATETIME NULL,
-	costoCalculado DECIMAL(18,0) NOT NULL CHECK(costoCalculado >= 0),
-	costoReal DECIMAL(18,0) NOT NULL CHECK(CostoReal >= 0)
-);
-
-drop TRIGGER trigBeforeInsertProyecto;
-drop TRIGGER trigBeforeUpdateProyecto;
-
-
-
-select * from Proyecto;
-
-update Proyecto set nombre = 'Este es un nombre' where idpProyecto = 2;
-
-INSERT INTO Proyecto VALUES(NEXT VALUE FOR secProyecto, 'P-AAAA-2020-1', 'Sistema Control de Costos', 'SCC', 'administracion', 'Sistema que lleve un control de los costos del area de Recursos Humanos, incluyecto los correspondientes a productos, servicios y empleados', '2020-04-11', '2024-04-11', 3000, 4000);
-INSERT INTO Proyecto VALUES(NEXT VALUE FOR secProyecto, 'E-BBBB-2022-1', 'Sistema Gestion de Proyectos', 'SGPTI', 'estudio', NULL, '2022-03-01', NULL, 1000, 2000);
-INSERT INTO Proyecto VALUES(NEXT VALUE FOR secProyecto, 'E-CCCC-2021-2', 'Sistema Gestion de Archivos', 'SGAR', 'estudio', NULL, '2019-05-01', NULL, 2000, 6500);
-
-
-
-DROP SEQUENCE secRol;
-DROP SEQUENCE secUsuario;
-DROP SEQUENCE secPermiso;
-DROP SEQUENCE secProyecto;
-DROP SEQUENCE secArea;
-DROP SEQUENCE secArchivo;
-DROP SEQUENCE secTarea;
-DROP SEQUENCE secRolUsuarioProyecto;
-DROP SEQUENCE secTareaArchivoProyecto;
-DROP SEQUENCE secRegistroHoraUsuario;
-
--- Se borran las tablas
-DROP TABLE RegistroHoraUsuario;
-DROP TABLE RolUsuarioProyecto;
-DROP TABLE TareaArchivoProyecto;
-DROP TABLE ProyectoArea;
-DROP TABLE UsuarioArea;
-DROP TABLE Rol;
-DROP TABLE Permiso;
-DROP TABLE Usuario;
-DROP TABLE Proyecto;
-DROP TABLE Area;
-DROP TABLE Archivo;
-DROP TABLE Tarea;
