@@ -182,6 +182,7 @@ CREATE TABLE RegistroHoraUsuario (
 );
 
 -- Se crean los procedimientos INSERT para cada tabla
+GO
 CREATE PROCEDURE uspInsertPermiso (
 @pCrear INT,
 @pLeer INT, 
@@ -194,6 +195,7 @@ VALUES(NEXT VALUE FOR secPermiso, @pCrear,@pLeer , @pBorrar, @pActualizar);
 END;
 GO
 
+GO
 CREATE PROCEDURE uspInsertRol (
 @pCodigo VARCHAR(15), 
 @pNombre VARCHAR(30),
@@ -205,7 +207,7 @@ VALUES(NEXT VALUE FOR secRol,@pCodigo ,@pNombre ,@pPermiso);
 END;
 GO
 
-
+GO
 CREATE PROCEDURE uspInsertUsuario (
 @pIdentificacion VARCHAR(10), 
 @pNombre VARCHAR(30), 
@@ -220,6 +222,7 @@ VALUES(NEXT VALUE FOR secUsuario,@pIdentificacion ,@pNombre ,@pApellido,@pCorreo
 END;
 GO
 
+GO
 CREATE PROCEDURE uspInsertProyecto(
 @pCodigo VARCHAR(30), 
 @pNombre VARCHAR(60), 
@@ -237,6 +240,7 @@ VALUES(NEXT VALUE FOR secProyecto,@pCodigo ,@pNombre ,@pSiglas,@pEstado,@pDescri
 END;
 GO
 
+GO
 CREATE PROCEDURE uspInsertRolUsuarioProyecto(
 @pIdUsuario VARCHAR(15), 
 @pIdfRol INT, 
@@ -250,6 +254,7 @@ VALUES(NEXT VALUE FOR secRolUsuarioProyecto,@pIdUsuario,@pIdfRol,@pidfProyecto,@
 END;
 GO
 
+GO
 CREATE PROCEDURE uspInsertTarea(
 @pIdfTarea  INT, 
 @pNombre VARCHAR(100), 
@@ -268,6 +273,7 @@ VALUES(NEXT VALUE FOR secTarea,@pIdfTarea,@pNombre,@pDuracionHora,@pDescripcion,
 END;
 GO
 
+GO
 CREATE PROCEDURE uspInsertArea (
 @pCodigo VARCHAR(30), 
 @pNombre VARCHAR(30))
@@ -278,6 +284,7 @@ VALUES(NEXT VALUE FOR secArea ,@pCodigo ,@pNombre);
 END;
 GO
 
+GO
 CREATE PROCEDURE uspInsertProyectoArea (
 @pIdfProyecto INT, 
 @pIdfArea INT)
@@ -288,6 +295,7 @@ VALUES(@pIdfProyecto ,@pIdfArea);
 END;
 GO
 
+GO
 CREATE PROCEDURE uspInsertArchivo (
 @pCodigo VARCHAR(30), 
 @pNombre VARCHAR(50),
@@ -300,6 +308,7 @@ VALUES(NEXT VALUE FOR secArchivo, @pCodigo,@pNombre,@pArchivo,@pObservacion);
 END;
 GO
 
+GO
 CREATE PROCEDURE uspInsertTareaArchivoProyecto (
 @pIdfTarea INT, 
 @pIdfArchivo INT,
@@ -311,6 +320,7 @@ VALUES(NEXT VALUE FOR secTareaArchivoProyecto,@pIdfTarea ,@pIdfArchivo,@pidfProy
 END;
 GO
 
+GO
 CREATE PROCEDURE uspInsertRegistroHoraUsuario(
 @pIdfRolUsuarioProyecto INT, 
 @pIdfTareaArchivoProyecto INT,
