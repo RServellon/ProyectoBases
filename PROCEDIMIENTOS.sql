@@ -337,7 +337,7 @@ CREATE PROCEDURE uspUpdateTarea(
 @pCostoReal DECIMAL(18,0)) 
 AS
 BEGIN
-UPDATE Terea SET idfTarea = @pIdfTarea,nombre = @pNombre, duracionHora = @pDuracionHora,descripcion = @pDescripcion,estado = @pEstado,
+UPDATE Tarea SET idfTarea = @pIdfTarea,nombre = @pNombre, duracionHora = @pDuracionHora,descripcion = @pDescripcion,estado = @pEstado,
 	   prioridad = @pPrioridad,fechaAsignacion = @pFechaAsignacion,fechaCumplimiento = @pFechaCumplimiento,costoCalculado = @pCostoCalculado,
 	   costoReal = @pCostoReal
 WHERE idpTarea = @pidpTarea;
@@ -361,34 +361,37 @@ CREATE PROCEDURE uspUpdateProyectoArea (
 AS
 BEGIN
 UPDATE ProyectoArea SET idfProyecto = @pIdfProyecto,idfArea = @pIdfArea 
-WHERE 
+WHERE idfProyecto = @pIdfProyecto AND idfArea = @pIdfArea;
 END;
 GO
 
-CREATE PROCEDURE uspInsertArchivo (
+CREATE PROCEDURE uspUpdateArchivo (
+@pidpArchivo INT,
 @pCodigo VARCHAR(30), 
 @pNombre VARCHAR(50),
 @pArchivo VARBINARY(MAX),
 @pObservacion TEXT)
 AS
 BEGIN
-INSERT INTO Archivo(idpArchivo,codigo,nombre,archivo,observacion) 
-VALUES(NEXT VALUE FOR secArchivo, @pCodigo,@pNombre,@pArchivo,@pObservacion);
+UPDATE Archivo SET codigo = @pCodigo,nombre = @pNombre,archivo = @pArchivo ,observacion = @pObservacion
+WHERE idpArchivo = @pidpArchivo;
 END;
 GO
 
-CREATE PROCEDURE uspInsertTareaArchivoProyecto (
+CREATE PROCEDURE uspUpdateTareaArchivoProyecto (
+@pidpTareaArchivoProyecto INT,
 @pIdfTarea INT, 
 @pIdfArchivo INT,
 @pidfProyecto INT)
 AS
 BEGIN
-INSERT INTO TareaArchivoProyecto(idpTareaArchivoProyecto,idfTarea,idfArchivo,idfProyecto) 
-VALUES(NEXT VALUE FOR secTareaArchivoProyecto,@pIdfTarea ,@pIdfArchivo,@pidfProyecto);
+UPDATE TareaArchivoProyecto SET idfTarea = @pIdfTarea,idfArchivo = @pIdfArchivo,idfProyecto = @pidfProyecto
+WHERE idpTareaArchivoProyecto = @pidpTareaArchivoProyecto;
 END;
 GO
 
-CREATE PROCEDURE uspInsertRegistroHoraUsuario(
+CREATE PROCEDURE uspUpdateRegistroHoraUsuario(
+@pIdpRegistroHoraUsuario INT,
 @pIdfRolUsuarioProyecto INT, 
 @pIdfTareaArchivoProyecto INT,
 @pCantidadHoras INT,
@@ -396,8 +399,9 @@ CREATE PROCEDURE uspInsertRegistroHoraUsuario(
 @pObservacion TEXT)
 AS
 BEGIN
-INSERT INTO RegistroHoraUsuario(idpRegistroHoraUsuario,idfRolUsuarioProyecto,idfTareaArchivoProyecto,cantidadHoras,fechaRegistro,observacion) 
-VALUES(NEXT VALUE FOR secRegistroHoraUsuario,@pIdfRolUsuarioProyecto ,@pIdfTareaArchivoProyecto,@pCantidadHoras,@pFechaRegistro,@pObservacion);
+UPDATE RegistrohoraUsuario SET idfRolUsuarioProyecto = @pIdfRolUsuarioProyecto,idfTareaArchivoProyecto = @pIdfTareaArchivoProyecto,
+	   cantidadHoras = @pCantidadHoras,fechaRegistro = @pFechaRegistro,observacion=@pObservacion
+WHERE idpRegistroHoraUsuario = @pIdpRegistroHoraUsuario;
 END;
 GO
 
@@ -492,8 +496,34 @@ EXEC uspDeleteArea 2;
 
 EXEC uspDeleteProyectoArea 2,1;
 
+--PRUEBAS  DE PROCEDIMIENTOS UPDATE
+SELECT * FROM Permiso;
+EXEC uspUpdatePermiso 3,0,0,0,0;
+SELECT * FROM Permiso;
 
+SELECT * FROM Rol;
+EXEC uspUpdateRol 2,'Cola', 'Colaborador', 1;
+SELECT * FROM Rol;
 
+SELECT * FROM Usuario;
+EXEC uspUpdateUsuario '5', 'danielv@gmail.com',50505050,50000;
+SELECT * FROM Usuario;
+
+SELECT * FROM Proyecto;
+EXEC uspUpdateProyecto 2,'E-DDD-2021-2', 'Sistema Gestion de Recursos', 'SGRE', 'estudio', NULL, '2021-05-30', NULL, 0, 0;
+SELECT * FROM Proyecto;
+
+SELECT * FROM RolUsuarioProyecto;
+EXEC uspUpdateRolUsuarioProyecto 3,'103', 2, 1,  '2021-05-20', '2022-04-15';
+SELECT * FROM RolUsuarioProyecto;
+
+SELECT * FROM TAREA;
+EXEC uspUpdateTarea 4,2,'Evaluacion', 8, NULL, 'sin iniciar', 1,'2022-06-14 00:00:00', NULL, 70000.0, 0.0;
+SELECT * FROM TAREA;
+
+SELECT * FROM Area;
+EXEC uspUpdateArea 1,'PTEI', 'Proyectos Tecnologicos Innovadore';
+SELECT * FROM Area;
 
 
 
