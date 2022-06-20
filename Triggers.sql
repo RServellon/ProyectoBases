@@ -9,6 +9,7 @@
 --parametros del RAISERROR
 --RAISERROR ( 'msg',level,state)
 --Listo
+GO
 CREATE OR ALTER TRIGGER trigBeforeInsertProyecto
 	ON dbo.Proyecto INSTEAD OF INSERT AS BEGIN
 	
@@ -26,6 +27,7 @@ CREATE OR ALTER TRIGGER trigBeforeInsertProyecto
 END
 
 --Listo
+GO
 CREATE OR ALTER TRIGGER trigBeforeUpdateProyecto
 	ON dbo.Proyecto INSTEAD OF UPDATE AS BEGIN
 	DECLARE @fechaInicioOLD DATETIME, @fechaInicioNEW  DATETIME, @fechaCierre DATETIME
@@ -46,6 +48,7 @@ CREATE OR ALTER TRIGGER trigBeforeUpdateProyecto
 END
 
 --Listo
+GO
 CREATE OR ALTER TRIGGER trigBeforeInsertRegistroHoraUsuario
 	ON dbo.RegistroHoraUsuario INSTEAD OF INSERT AS BEGIN
 	

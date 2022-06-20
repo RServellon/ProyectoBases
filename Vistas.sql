@@ -1,63 +1,60 @@
-
---VISTA QUE ME DA UN INFORME DETALLADO DE LA CANTIDAD DE PROYECTOS POR AREA DEL TSE Y SUS COSTES PROMEDIO TOTALES
+-- Vista 1: Desglosa un informe acerca de la cantidad de proyectos
+-- por área y sus costos promedio calculados y reales
 GO
-CREATE OR ALTER VIEW view_det_proy_area 
+CREATE OR ALTER VIEW vProyectosPorArea 
 AS
-SELECT a.codigo Area, COUNT(*) cantidad_Proyectos, AVG(p.costoCalculado) prom_costo_calculado, AVG(p.costoReal) prom_costo_real 
+SELECT a.codigo Area, COUNT(*) cantidadProyectos, AVG(p.costoCalculado) promedioCostoCalculado, AVG(p.costoReal) promedioCostoReal 
 	FROM Area a INNER JOIN ProyectoArea pa ON a.idpArea = pa.idfArea 
 	INNER JOIN Proyecto p ON p.idpProyecto = pa.idfProyecto
 	GROUP BY a.codigo;
 GO
 
-select * from view_det_proy_area;
---DROP VIEW view_det_proy_area;
-
-
---VISTA QUE ME DA UN INFORME DE LA CANTIDAD DE EMPLEADOS EN CADA PROYECTO
+-- Vista 2: Desglosa un informe acerca de la cantidad de empleados
+-- en cada proyecto
 GO
-CREATE OR ALTER VIEW view_cant_emp_proy 
+CREATE OR ALTER VIEW vCantidadEmpleadosPorProyecto
 AS
-SELECT pa.nombre, COUNT(*) cantidad_empleados
+SELECT pa.nombre, COUNT(*) cantidadEmpleados
 	FROM RolUsuarioProyecto rup INNER JOIN Proyecto pa ON rup.idfProyecto= pa.idpProyecto
 	GROUP BY pa.nombre;
 GO
 
-select * from view_cant_emp_proy;
---DROP VIEW view_cant_emp_proy;
-
-
---VISTA QUE ME DA UN INFORME COMPLETO DE UN EMPLEADO Y SU ROL EN CADA PROYECTO
+-- Vista 3: Desglosa un informe que contiene la información básica de un empleado
+-- asignado a un proyecto como identificación, nombre completo, correo electrónico, rol, 
+-- nombre del proyecto y código del proyecto. 
 GO
-CREATE OR ALTER VIEW view_emp_proyecto 
+CREATE OR ALTER VIEW vEmpleadoPorProyecto
 AS
-SELECT u.identificacion id, u.nombre +' '+ u.apellido nombre_empleado, u.correo email, r.codigo rol , p.nombre nombre_proyecto, p.codigo codigo_proyecto
+SELECT u.identificacion id, u.nombre +' '+ u.apellido nombreCompletoEmpleado, u.correo email, r.codigo rol , p.nombre nombre_proyecto, p.codigo codigo_proyecto
 	FROM Usuario u INNER JOIN RolUsuarioProyecto rup ON rup.idUsuario = u.identificacion
 	INNER JOIN Rol r ON r.idpRol = rup.idfRol
 	INNER JOIN Proyecto p ON p.idpProyecto = rup.idfProyecto;
 GO
 
-select * from view_emp_proyecto;
-
-
-
---VISTA QUE ME MUESTRA INFORMACION DE LOS PROYECTOS (A NIVEL DE USUARIOS - LOS COSTES NO DEBERIAN DE APARECER)
+-- Vista 4: Desglosa un informe completo que contiene la información básica de todos los
+-- proyectos como codigo, nombre, siglas, estado, fecha de inicio y fecha de cierre.
+-- Este informe se dirige a los participantes de un proyecto, por lo 
+-- que los costos no se incluyen por razones de discreción. 
 GO
-CREATE OR ALTER VIEW view_proyectos_inf 
+CREATE OR ALTER VIEW vDesgloseProyecto
 AS
 SELECT p.codigo, p.nombre, p.siglas, p.estado, p.fechaInicio fecha_inicio, p.fechaCierre fecha_cierre
 FROM Proyecto p;
 GO
 
-select * from view_proyectos_inf;
---DROP VIEW view_proyectos_inf;
 
---VISTA QUE ME FILTRA INFORMACION DE LOS PROYECTOS y SU ESTADO
+-- Vista 5: Desglosa informe simplificado que contiene la siguiente información de los
+-- proyectos: codigo, nombre, siglas y estado
 GO
-CREATE OR ALTER VIEW view_proyectos_estado
+CREATE OR ALTER VIEW vEstadoProyectos
 AS
 SELECT p.codigo, p.nombre, p.siglas, p.estado
 FROM Proyecto p;
 GO
 
-select * from view_proyectos_estado
-order by estado;
+
+SELECT * FROM vProyectosPorArea;
+SELECT * FROM vCantidadEmpleadosPorProyecto;
+SELECT * FROM vEmpleadoPorProyecto;
+SELECT * FROM vDesgloseProyecto;
+SELECT * FROM vEstadoProyectos;

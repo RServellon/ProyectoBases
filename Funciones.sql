@@ -105,3 +105,19 @@ GO
 
 SELECT dbo.funRetornaSalarioPorIdUsuario('104') AS costoHora;
 --DROP FUNCTION funRetornaSalarioPorIdUsuario;
+
+
+-- Funcion 6
+GO
+CREATE OR ALTER FUNCTION dbo.funRetornaProyectosPorEstado (
+	@pEstado VARCHAR(20)
+)
+RETURNS TABLE AS
+RETURN
+	SELECT *
+	FROM vEstadoProyectos
+	WHERE estado = @pEstado;
+GO
+
+SELECT dbo.funRetornaProyectosPorEstado('estudio') AS Proyectos;
+--DROP FUNCTION funRetornaSalarioPorIdUsuario;
