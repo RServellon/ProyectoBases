@@ -21,6 +21,26 @@ GO
 SELECT dbo.funCalculoCostoEstimadoTarea(1) AS Costo;
 --DROP FUNCTION funCalculoCostoEstimadoTarea;
 
+GO
+CREATE OR ALTER FUNCTION dbo.funCalculoCostoEstimado (
+	@pIdTarea INT,
+	@pIdRolUsuarioProyecto INT
+)
+RETURNS DECIMAL(18,0) AS
+BEGIN
+	DECLARE
+	@costoHora DECIMAL(18,0),
+	@duracionHora INT;
+	SELECT @duracionHora = Tarea.duracionHora,
+		   @costoHora = dbo.funRetornaSalarioPorRegistroAsignacion(@pIdRolUsuarioProyecto) 
+	FROM Tarea
+	WHERE idfTarea = @pIdTarea
+	RETURN @costoHora * @duracionHora;
+END
+GO
+
+SELECT dbo.funCalculoCostoEstimado(2, 1) AS Costo;
+
 
 -- Función 2: Calcular horas estimadas de una tarea padre
 -- Se puede usar al agregar, eliminar o actualizar una tarea y se deba
@@ -90,7 +110,7 @@ SELECT dbo.funRetornaSalarioPorRegistroAsignacion(1) AS costoHora;
 -- y retorne su duracion en horas
 GO
 CREATE OR ALTER FUNCTION dbo.funRetornaDuracionPorIdTarea (
-	@pDuracion INT
+	@pIdTarea INT
 )
 RETURNS INT AS
 BEGIN
@@ -98,12 +118,12 @@ BEGIN
 	@duracion INT;
 	SELECT @duracion = Tarea.duracionHora
 	FROM Tarea
-	WHERE identificacion = @pIdUsuario;
-	RETURN @salario;
+	WHERE idpTarea = @pIdTarea;
+	RETURN @duracion;
 END
 GO
 
-SELECT dbo.funRetornaSalarioPorIdUsuario('104') AS costoHora;
+SELECT dbo.funRetornaSalarioPorIdUsuario('104') AS Duracion;
 --DROP FUNCTION funRetornaSalarioPorIdUsuario;
 
 
@@ -115,7 +135,7 @@ CREATE OR ALTER FUNCTION dbo.funRetornaProyectosPorEstado (
 RETURNS TABLE AS
 RETURN
 	SELECT *
-	FROM vEstadoProyectos
+	FROM vDesgloseProyecto
 	WHERE estado = @pEstado;
 GO
 
