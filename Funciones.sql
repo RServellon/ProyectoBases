@@ -119,5 +119,5 @@ RETURN
 	WHERE estado = @pEstado;
 GO
 
-SELECT dbo.funRetornaProyectosPorEstado('estudio') AS Proyectos;
+SELECT * FROM dbo.funRetornaProyectosPorEstado('estudio') AS Proyectos;
 --DROP FUNCTION funRetornaSalarioPorIdUsuario;
