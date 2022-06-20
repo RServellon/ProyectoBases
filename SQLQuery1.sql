@@ -210,7 +210,6 @@ SELECT * FROM Permiso;
 
 
 INSERT INTO Rol VALUES(NEXT VALUE FOR secRol, 'Admin', 'Administrador', 1);
-INSERT INTO Rol VALUES(NEXT VALUE FOR secRol, 'Admin', 'Administrador', 1);
 INSERT INTO Rol VALUES(NEXT VALUE FOR secRol, 'Coor', 'Coordinador', 3);
 INSERT INTO Rol VALUES(NEXT VALUE FOR secRol, 'Part', 'Participante', 2);
 SELECT * FROM Rol;
@@ -244,6 +243,13 @@ INSERT INTO RolUsuarioProyecto VALUES(NEXT VALUE FOR secRolUsuarioProyecto, '106
 INSERT INTO RolUsuarioProyecto VALUES(NEXT VALUE FOR secRolUsuarioProyecto, '106', 3, 2, '2022-09-10', NULL);
 SELECT * FROM RolUsuarioProyecto;
 
+
+INSERT INTO UsuarioArea VALUES (101, 1);
+INSERT INTO UsuarioArea VALUES (102, 1);
+INSERT INTO UsuarioArea VALUES (103, 1);
+INSERT INTO UsuarioArea VALUES (104, 2);
+INSERT INTO UsuarioArea VALUES (105, 2);
+INSERT INTO UsuarioArea VALUES (106, 2);
 
 INSERT INTO Area VALUES(NEXT VALUE FOR secArea, 'PTE', 'Proyectos Tecnologicos');
 INSERT INTO Area VALUES(NEXT VALUE FOR secArea, 'RRHH', 'Recursos Humanos');

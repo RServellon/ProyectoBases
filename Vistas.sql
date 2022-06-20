@@ -51,4 +51,13 @@ GO
 select * from view_proyectos_inf;
 --DROP VIEW view_proyectos_inf;
 
---VISTA QUE ME FILTRA INFORMACION DE LOS PROYECTOS SEGUN SU ESTADO
+--VISTA QUE ME FILTRA INFORMACION DE LOS PROYECTOS y SU ESTADO
+GO
+CREATE OR ALTER VIEW view_proyectos_estado
+AS
+SELECT p.codigo, p.nombre, p.siglas, p.estado
+FROM Proyecto p;
+GO
+
+select * from view_proyectos_estado
+order by estado;
