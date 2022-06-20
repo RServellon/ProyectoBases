@@ -9,15 +9,21 @@ SELECT a.codigo Area, COUNT(*) cantidadProyectos, AVG(p.costoCalculado) promedio
 	GROUP BY a.codigo;
 GO
 
+SELECT * FROM Proyecto;
+SELECT * FROM vProyectosPorArea;
+
 -- Vista 2: Desglosa un informe acerca de la cantidad de empleados
--- en cada proyecto
+-- en cada proyecto y la suma de los salarios por hora de estos
 GO
 CREATE OR ALTER VIEW vEmpleadosPorProyecto
 AS
-SELECT pa.nombre, COUNT(*) cantidadEmpleados, SUM(dbo.funRetornaSalarioPorRegistroAsignacion(rup.idpRolUsuarioProyecto)) sumaSalariosHora
+SELECT pa.nombre, COUNT(*) cantidadEmpleados, SUM(dbo.funRetornaSalarioPorIdUsuario(rup.idUsuario)) sumaSalariosHora
 	FROM RolUsuarioProyecto rup INNER JOIN Proyecto pa ON rup.idfProyecto= pa.idpProyecto
 	GROUP BY pa.nombre;
 GO
+
+SELECT * FROM vEmpleadosPorProyecto;
+
 
 -- Vista 3: Desglosa un informe que contiene la información básica de un empleado
 -- asignado a un proyecto como identificación, nombre completo, correo electrónico, rol, 
@@ -31,6 +37,8 @@ SELECT u.identificacion id, u.nombre +' '+ u.apellido nombreCompletoEmpleado, u.
 	INNER JOIN Proyecto p ON p.idpProyecto = rup.idfProyecto;
 GO
 
+SELECT * FROM vEmpleados;
+
 -- Vista 4: Desglosa un informe completo que contiene la información básica de todos los
 -- proyectos como codigo, nombre, siglas, estado, fecha de inicio y fecha de cierre.
 -- Este informe se dirige a los participantes de un proyecto, por lo 
@@ -42,10 +50,30 @@ SELECT p.codigo, p.nombre, p.siglas, p.estado, p.fechaInicio, p.fechaCierre
 FROM Proyecto p;
 GO
 
---SUM(dbo.funRetornaSalarioPorRegistroAsignacion(rup.idpRolUsuarioProyecto)) sumaSalarios
-
-SELECT * FROM vProyectosPorArea;
-SELECT * FROM vEmpleadosPorProyecto;
-SELECT * FROM vEmpleados;
 SELECT * FROM vProyectos;
-select * from Tarea;
+
+-- Vista 5: Desglosa un informe de las tareas asociadas a sus proyectos
+-- con la siguiente información nombre de tarea, estado, prioridad,
+-- nombre de proyecto e identificador del proyecto
+GO
+CREATE OR ALTER VIEW vTareas
+AS
+SELECT  t.nombre nombreTarea, t.estado, t.prioridad, p.nombre nombreProyecto, p.idpProyecto idProyecto
+FROM TareaArchivoProyecto tap, Proyecto p, Tarea t
+WHERE tap.idfTarea = t.idpTarea AND tap.idfProyecto = p.idpProyecto;
+GO
+
+SELECT * FROM vTareas;
+
+
+-- Vista 6: Desglosa un informe acerca de la cantidad de tareas
+-- en cada proyecto
+GO
+CREATE OR ALTER VIEW vTareasPorProyecto
+AS
+SELECT p.nombre nombreProyecto, p.idpProyecto, COUNT(*) cantidadTareas
+FROM TareaArchivoProyecto tap INNER JOIN Proyecto p ON tap.idfProyecto = p.idpProyecto
+GROUP BY p.nombre, p.idpProyecto;
+GO
+
+SELECT * FROM vTareasPorProyecto;

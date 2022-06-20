@@ -1,8 +1,7 @@
 -- Funciones
 
 -- Función 1: Calcular costo estimado de una tarea padre
--- Se puede usar al agregar, eliminar o actualizar una tarea y se deba
--- de volver a calcular el costo estimado de su tarea padre
+-- Costo estimado = salario por hora de un usuario * duración de tarea
 GO
 CREATE OR ALTER FUNCTION dbo.funCalculoCostoEstimadoTarea (
 	@pIdTarea INT
@@ -23,18 +22,18 @@ SELECT dbo.funCalculoCostoEstimadoTarea(1) AS Costo;
 
 GO
 CREATE OR ALTER FUNCTION dbo.funCalculoCostoEstimado (
-	@pIdTarea INT,
-	@pIdRolUsuarioProyecto INT
+	@pIdTareaAsignacion INT,
+	@pIdUsuarioAsignacion INT
 )
 RETURNS DECIMAL(18,0) AS
 BEGIN
 	DECLARE
 	@costoHora DECIMAL(18,0),
 	@duracionHora INT;
-	SELECT @duracionHora = Tarea.duracionHora,
-		   @costoHora = dbo.funRetornaSalarioPorRegistroAsignacion(@pIdRolUsuarioProyecto) 
-	FROM Tarea
-	WHERE idfTarea = @pIdTarea
+	SELECT @duracionHora = t.duracionHora,
+		   @costoHora = dbo.funRetornaSalarioPorRegistroAsignacion(@pIdUsuarioAsignacion) 
+	FROM Tarea t, TareaArchivoProyecto tap
+	WHERE t.idfTarea = tap.idfTarea AND tap.idpTareaArchivoProyecto = @pIdTareaAsignacion
 	RETURN @costoHora * @duracionHora;
 END
 GO
@@ -64,11 +63,11 @@ SELECT dbo.funCalculoHorasTarea(1) AS CantidadHoras;
 --DROP FUNCTION funCalculoHorasTarea;
 
 
--- Función 3: Reciba id del usuario por parámetro
--- y retorne su salario por hora
+-- Función 1: Recibe id del usuario por parámetro y
+-- retorna su salario por hora
 GO
 CREATE OR ALTER FUNCTION dbo.funRetornaSalarioPorIdUsuario (
-	@pIdUsuario INT
+	@pIdUsuario VARCHAR(15)
 )
 RETURNS DECIMAL(18,0) AS
 BEGIN
@@ -81,32 +80,31 @@ BEGIN
 END
 GO
 
-SELECT dbo.funRetornaSalarioPorIdUsuario('104') AS costoHora;
---DROP FUNCTION funRetornaSalarioPorIdUsuario;
+SELECT * FROM Usuario;
+SELECT dbo.funRetornaSalarioPorIdUsuario('103') AS SalarioHora;
 
-
--- Función 4: Reciba id del registro de asignación de un usuario a un proyecto
--- por parámetro y retorne el salario por hora correspondiente al usuario
+-- Función 2: Recibe id del proyecto por parámetro y
+-- retorna su nombre
 GO
-CREATE OR ALTER FUNCTION dbo.funRetornaSalarioPorRegistroAsignacion (
-	@pIdRegistro INT
+CREATE OR ALTER FUNCTION dbo.funRetornaNombreProyectoPorId (
+	@pIdProyecto INT
 )
-RETURNS DECIMAL(18,0) AS
+RETURNS VARCHAR(100) AS
 BEGIN
 	DECLARE
-	@salario DECIMAL(18,0);
-	SELECT @salario = dbo.funRetornaSalarioPorIdUsuario(RUP.idUsuario)
-	FROM RolUsuarioProyecto AS RUP
-	WHERE idpRolUsuarioProyecto = @pIdRegistro;
-	RETURN @salario;
+	@nombre VARCHAR(100);
+	SELECT @nombre = nombre
+	FROM Proyecto
+	WHERE idpProyecto = @pIdProyecto;
+	RETURN @nombre;
 END
 GO
-select * from RolUsuarioProyecto;
-SELECT dbo.funRetornaSalarioPorRegistroAsignacion(1) AS costoHora;
---DROP FUNCTION funRetornaSalarioPorRegistroAsignacion;
+
+SELECT * FROM Proyecto;
+SELECT dbo.funRetornaNombreProyectoPorId(1) AS NombreProyecto;
 
 
--- Función 5: Reciba id de la tarea por parámetro
+-- Función 3: Reciba id de la tarea por parámetro
 -- y retorne su duracion en horas
 GO
 CREATE OR ALTER FUNCTION dbo.funRetornaDuracionPorIdTarea (
@@ -123,11 +121,12 @@ BEGIN
 END
 GO
 
-SELECT dbo.funRetornaSalarioPorIdUsuario('104') AS Duracion;
---DROP FUNCTION funRetornaSalarioPorIdUsuario;
+SELECT * FROM Tarea;
+SELECT dbo.funRetornaDuracionPorIdTarea(5) AS DuracionHoras;
 
 
--- Funcion 6
+-- Función 4: Recibe por parámetro un estado (estudio, administracion, post)
+-- y retorna los proyectos que lo posean
 GO
 CREATE OR ALTER FUNCTION dbo.funRetornaProyectosPorEstado (
 	@pEstado VARCHAR(20)
@@ -139,5 +138,42 @@ RETURN
 	WHERE estado = @pEstado;
 GO
 
+SELECT * FROM Proyecto;
 SELECT * FROM dbo.funRetornaProyectosPorEstado('estudio') AS Proyectos;
---DROP FUNCTION funRetornaSalarioPorIdUsuario;
+
+-- Función 5: Recibe por parámetro un estado (sin iniciar, en proceso, completado)
+-- y el identificador de un proyecto, de manera que retorna todas las tareas
+-- que esten asociadas a dicho proyecto y cumplan con el estado indicado
+GO
+CREATE OR ALTER FUNCTION dbo.funRetornaTareasDeProyectoPorEstado (
+	@pEstado VARCHAR(20),
+	@pIdProyecto INT
+)
+RETURNS TABLE AS
+RETURN
+	SELECT *
+	FROM vTareas
+	WHERE vTareas.estado = @pEstado AND vTareas.idProyecto = @pIdProyecto;
+GO
+
+SELECT * FROM Tarea;
+SELECT * FROM Proyecto;
+SELECT * FROM TareaArchivoProyecto;
+SELECT * FROM dbo.funRetornaTareasDeProyectoPorEstado('sin iniciar', 1) AS Proyectos;
+
+-- Función 6: Recibe por parámetro una prioridad (1, 2, 3)
+-- y el identificador de un proyecto, de manera que retorna todas las tareas
+-- que esten asociadas a dicho proyecto y cumplan con la prioridad indicada
+GO
+CREATE OR ALTER FUNCTION dbo.funRetornaTareasDeProyectoPorPrioridad (
+	@pPrioridad INT,
+	@pIdProyecto INT
+)
+RETURNS TABLE AS
+RETURN
+	SELECT *
+	FROM vTareas
+	WHERE vTareas.prioridad = @pPrioridad AND vTareas.idProyecto = @pIdProyecto;
+GO
+
+SELECT * FROM dbo.funRetornaTareasDeProyectoPorPrioridad(1, 2);
