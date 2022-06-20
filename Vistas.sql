@@ -1,5 +1,5 @@
 -- Vista 1: Desglosa un informe acerca de la cantidad de proyectos
--- por área y sus costos promedio calculados y reales
+-- por área y sus costos promedios calculado y reales
 GO
 CREATE OR ALTER VIEW vProyectosPorArea 
 AS
@@ -25,7 +25,7 @@ GO
 GO
 CREATE OR ALTER VIEW vEmpleadoPorProyecto
 AS
-SELECT u.identificacion id, u.nombre +' '+ u.apellido nombreCompletoEmpleado, u.correo email, r.codigo rol , p.nombre nombre_proyecto, p.codigo codigo_proyecto
+SELECT u.identificacion id, u.nombre +' '+ u.apellido nombreCompletoEmpleado, u.correo email, r.codigo rol , p.nombre nombreProyecto, p.codigo codigoProyecto
 	FROM Usuario u INNER JOIN RolUsuarioProyecto rup ON rup.idUsuario = u.identificacion
 	INNER JOIN Rol r ON r.idpRol = rup.idfRol
 	INNER JOIN Proyecto p ON p.idpProyecto = rup.idfProyecto;
@@ -38,7 +38,7 @@ GO
 GO
 CREATE OR ALTER VIEW vDesgloseProyecto
 AS
-SELECT p.codigo, p.nombre, p.siglas, p.estado, p.fechaInicio fecha_inicio, p.fechaCierre fecha_cierre
+SELECT p.codigo, p.nombre, p.siglas, p.estado, p.fechaInicio, p.fechaCierre
 FROM Proyecto p;
 GO
 
