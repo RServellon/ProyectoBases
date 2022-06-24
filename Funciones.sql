@@ -134,7 +134,7 @@ CREATE OR ALTER FUNCTION dbo.funRetornaProyectosPorEstado (
 RETURNS TABLE AS
 RETURN
 	SELECT *
-	FROM vDesgloseProyecto
+	FROM vProyectos
 	WHERE estado = @pEstado;
 GO
 
