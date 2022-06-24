@@ -111,5 +111,31 @@ CREATE OR ALTER TRIGGER trigBeforeInsertRegistroHoraUsuario
 		SELECT * FROM INSERTED;
 END
 
+-- Prueba de Trigger Before Insert Registro Hora Usuario
+-- @pIdUsuario VARCHAR(15),
+-- @pIdfRol INT,
+-- @pidfProyecto INT,
+-- @pFechaAsignacion DATETIME,
+-- @pFechaDesasignacion DATETIME)
+EXEC uspInsertRolUsuarioProyecto '102', 1, 3, '2021-05-30', NULL;
+EXEC uspUpdateRolUsuarioProyecto 3,'103', 2, 1, '2021-05-20', '2022-04-15';
+SELECT * FROM RolUsuarioProyecto;
+
+-- Prueba de Trigger Before Insert Registro Hora Usuario
+-- @pIdfTarea INT,
+-- @pIdfArchivo INT,
+-- @pidfProyecto INT)
+-- Numero de secuencia: 5
+EXEC uspInsertTareaArchivoProyecto 4, NULL, 3;
+SELECT * FROM TareaArchivoProyecto;
+
+
+-- Prueba de Trigger Before Insert Registro Hora Usuario
+-- Prueba de Trigger Before Insert Registro Hora Usuario-- @pIdfRolUsuarioProyecto INT,
+-- @pIdfTareaArchivoProyecto INT,
+-- @pCantidadHoras INT,
+-- @pObservacion TEXT)
+-- EXEC uspInsertRolUsuarioProyecto '102', 1, 3, '2021-05-30', NULL;
+EXEC uspInsertRegistroHoraUsuario 3, 5, 3, 'Corregir lista de correos';
 
 
